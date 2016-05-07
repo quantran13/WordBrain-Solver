@@ -51,19 +51,15 @@ public class FXMLController implements Initializable {
 		try {
 			dictionary = readDictionary("dictionary.txt");
 		} catch (IOException ex) {
-			Alert alert = new Alert(AlertType.ERROR);
-			alert.setTitle("Error reading dictionary!");
-			alert.setHeaderText(null);
+			String title = "Error reading the dictionary";
+			String message;
 			
-			if (ex instanceof FileNotFoundException) {
-				alert.setContentText("dictionary.txt not found!");
-			} else {	
-				alert.setContentText("Cannot read the the dictionary" + 
-					" from dictionary.txt! Check the file again.");
-			}
+			if (ex instanceof FileNotFoundException)
+				message = "File dictionary.txt not found!";
+			else
+				message = "An error happen while reading from the dictionary!";
 			
-			alert.showAndWait();
-			Platform.exit();
+			showErrorMessage(title, message, AlertType.ERROR, true);
 		}
 		
 		/*
@@ -88,9 +84,25 @@ public class FXMLController implements Initializable {
 		int width = Integer.parseInt((String) cboGridWidth.getValue());
 		int height = Integer.parseInt((String) cboGridHeight.getValue());
 		
-		// Get the possible word lengths
+		// Get the possible word length
 		String wordLengthText = txtWordLength.getText();
-		wordLength = Integer.parseInt(wordLengthText);
+		
+		// Error messages in case an invalid word length is entered
+		String title = "Word length input error";
+		String message = "Please input a valid word length in the form " +
+						 "of an unsigned integer!";
+		
+		try {
+			wordLength = Integer.parseInt(wordLengthText);
+		} catch (NumberFormatException ex) {
+			showErrorMessage(title, message, AlertType.ERROR, false);
+			return;
+		}
+		
+		if (wordLength <= 0) {
+			showErrorMessage(title, message, AlertType.ERROR, false);
+			return;
+		}
 		
 		// Get the grid of characters
 		String chars[][] = new String[height][width];
@@ -107,10 +119,10 @@ public class FXMLController implements Initializable {
 			}
 		
 		// Solve
-		//String output = Solve(chars, check, width, height);
+		String output = Solve(chars, check, width, height);
 		
 		// Write to output area
-		//txtOutputWords.setText(output);
+		txtOutputWords.setText(output);
 	}
 	
 	/**
@@ -222,6 +234,27 @@ public class FXMLController implements Initializable {
 			output += words.get(i);
 		
 		return output;
+	}
+	
+	/**
+	 * Show a popup window informing user about the error.
+	 * 
+	 * @param title Popup window's title.
+	 * @param message Error message.
+	 * @param type The alert type
+	 * @param exit True if exit the program after showing the message.
+	 */
+	protected void showErrorMessage(String title, String message, 
+		                            AlertType type, boolean exit) {
+		Alert alert = new Alert(type);
+		
+		alert.setTitle(title);
+		alert.setHeaderText(null);
+		alert.setContentText(message);
+
+		alert.showAndWait();
+		if (exit)
+			Platform.exit();
 	}
 	
 	/**
