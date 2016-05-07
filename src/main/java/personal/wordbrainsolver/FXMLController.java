@@ -80,11 +80,26 @@ public class FXMLController implements Initializable {
 		wordLength = 0;
 		wordsResult.clear();
 		
-		// Get the puzzle dimensions
-		int width = Integer.parseInt((String) cboGridWidth.getValue());
-		int height = Integer.parseInt((String) cboGridHeight.getValue());
+		/*
+         * Get the puzzle dimensions
+         */
+        int height = 0;
+        int width = 0;
+        
+		try {
+            // Try to get the width/length and convert to integers
+            width = Integer.parseInt((String) cboGridWidth.getValue());
+            height = Integer.parseInt((String) cboGridHeight.getValue());
+        } catch (NumberFormatException ex) {
+            // If the user hasn't chosen the width/length.
+            showErrorMessage("Invalid width/height", "You didn't provide the "
+                    + "puzzle's width/length!", AlertType.ERROR, false);
+        }
 		
-		// Get the possible word length
+		
+		/*
+         * Get the possible word length
+         */
 		String wordLengthText = txtWordLength.getText();
 		
 		// Error messages in case an invalid word length is entered
@@ -92,6 +107,8 @@ public class FXMLController implements Initializable {
 		String message = "Please input a valid word length in the form " +
 						 "of an unsigned integer!";
 		
+        // Get the word length or show an error message if the word length is
+        // invalid
 		try {
 			wordLength = Integer.parseInt(wordLengthText);
 		} catch (NumberFormatException ex) {
@@ -104,7 +121,9 @@ public class FXMLController implements Initializable {
 			return;
 		}
 		
-		// Get the grid of characters
+		/*
+         * Get the grid of characters.
+         */
 		String chars[][] = new String[height][width];
 		boolean[][] check = new boolean[height][width];
 		
