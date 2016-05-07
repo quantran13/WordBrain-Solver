@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="916.0" prefWidth="1273.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="personal.wordbrainsolver.FXMLController">
+   <children>
+      <TextArea fx:id="txtInputCharacters" layoutX="88.0" layoutY="383.0" prefHeight="354.0" prefWidth="428.0" />
+      <TextArea fx:id="txtOutputWords" layoutX="635.0" layoutY="383.0" prefHeight="354.0" prefWidth="428.0" />
+      <Button fx:id="btnSolve" layoutX="527.0" layoutY="384.0" mnemonicParsing="false" onAction="#btnSolve_Click" prefHeight="23.0" prefWidth="96.0" text="Solve!" />
+      <TextField fx:id="txtWordLength" layoutX="88.0" layoutY="233.0" prefHeight="25.0" prefWidth="428.0" />
+      <Label layoutX="88.0" layoutY="205.0" text="Word length:" />
+      <Label layoutX="88.0" layoutY="355.0" text="Input characters:" />
+      <Label layoutX="635.0" layoutY="355.0" text="Output words:" />
+      <Label layoutX="88.0" layoutY="280.0" text="Dimensions:" />
+      <ImageView fitHeight="143.0" fitWidth="295.0" layoutX="88.0" layoutY="30.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../styles/wordbrain.png" />
+         </image></ImageView>
+      <Label layoutX="88.0" layoutY="313.0" text="Width: " />
+      <Label layoutX="314.0" layoutY="313.0" text="Height: " />
+      <ComboBox fx:id="cboGridWidth" layoutX="135.0" layoutY="308.0" prefWidth="150.0" />
+      <ComboBox fx:id="cboGridHeight" layoutX="366.0" layoutY="308.0" prefWidth="150.0" />
+   </children>
+</AnchorPane>
