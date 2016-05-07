@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.text.*?>
 <?import javafx.scene.image.*?>
 <?import java.lang.*?>
 <?import java.util.*?>
@@ -7,7 +8,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane id="AnchorPane" prefHeight="916.0" prefWidth="1273.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="personal.wordbrainsolver.FXMLController">
+<AnchorPane id="AnchorPane" prefHeight="916.0" prefWidth="1158.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="personal.wordbrainsolver.FXMLController">
    <children>
       <TextArea fx:id="txtInputCharacters" layoutX="88.0" layoutY="383.0" prefHeight="354.0" prefWidth="428.0" />
       <TextArea fx:id="txtOutputWords" layoutX="635.0" layoutY="383.0" prefHeight="354.0" prefWidth="428.0" />
@@ -25,5 +26,11 @@
       <Label layoutX="314.0" layoutY="313.0" text="Height: " />
       <ComboBox fx:id="cboGridWidth" layoutX="135.0" layoutY="308.0" prefWidth="150.0" />
       <ComboBox fx:id="cboGridHeight" layoutX="366.0" layoutY="308.0" prefWidth="150.0" />
+      <Separator layoutX="3.0" layoutY="174.0" prefHeight="25.0" prefWidth="1149.0" />
+      <Label layoutX="260.0" layoutY="80.0" text="Solver">
+         <font>
+            <Font name="Georgia Bold" size="40.0" />
+         </font>
+      </Label>
    </children>
 </AnchorPane>
