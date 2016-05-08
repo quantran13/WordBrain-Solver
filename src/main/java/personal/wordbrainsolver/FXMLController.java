@@ -1,16 +1,12 @@
 package personal.wordbrainsolver;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -40,9 +36,9 @@ public class FXMLController implements Initializable {
     @FXML
     private TextField txtWordLength;
     @FXML
-    private ComboBox cboGridWidth;
+    private ComboBox<Integer> cboGridWidth;
     @FXML
-    private ComboBox cboGridHeight;
+    private ComboBox<Integer> cboGridHeight;
 
     public FXMLController() {
         this.wordLength = 0;
@@ -78,14 +74,44 @@ public class FXMLController implements Initializable {
         /*
 		 * Populate the grid width and height combo boxes
          */
-        cboGridWidth.getItems().addAll("3", "4", "5", "6", "7");
-        cboGridHeight.getItems().addAll("3", "4", "5", "6", "7");
+        cboGridWidth.getItems().addAll(3, 4, 5, 6, 7);
+        cboGridHeight.getItems().addAll(3, 4, 5, 6, 7);
+    }
+    
+    /**
+     * Check if both combo boxes for the grid's width and height are selected.
+     * If yes, enable the characters input area for user to input.
+     * 
+     * @param event
+     */
+    @FXML
+    protected void cboGridWidth_Action(ActionEvent event) {
+        boolean isWidthComboBoxEmpty = cboGridWidth.getSelectionModel().isEmpty();
+        boolean isHeightComboBoxEmpty = cboGridHeight.getSelectionModel().isEmpty();
+        
+        if (!isWidthComboBoxEmpty && !isHeightComboBoxEmpty)
+            txtInputCharacters.setDisable(false);
+    }
+    
+    /**
+     * Check if both combo boxes for the grid's width and height are selected.
+     * If yes, enable the characters input area for user to input.
+     * 
+     * @param event
+     */
+    @FXML
+    protected void cboGridHeight_Action(ActionEvent event) {
+        boolean isWidthComboBoxEmpty = cboGridWidth.getSelectionModel().isEmpty();
+        boolean isHeightComboBoxEmpty = cboGridHeight.getSelectionModel().isEmpty();
+        
+        if (!isWidthComboBoxEmpty && !isHeightComboBoxEmpty)
+            txtInputCharacters.setDisable(false);
     }
 
     /**
      * Handle the solve button click event.
      *
-     * @param event
+     * @param event The button click event.
      */
     @FXML
     protected void btnSolve_Click(ActionEvent event) {
@@ -101,8 +127,8 @@ public class FXMLController implements Initializable {
 
         try {
             // Try to get the width/length and convert to integers
-            width = Integer.parseInt((String) cboGridWidth.getValue());
-            height = Integer.parseInt((String) cboGridHeight.getValue());
+            width = cboGridWidth.getValue();
+            height = cboGridHeight.getValue();
         } catch (NumberFormatException ex) {
             // If the user hasn't chosen the width/length.
             showErrorMessage("Invalid width/height", "You didn't provide the "
@@ -136,15 +162,15 @@ public class FXMLController implements Initializable {
         /*
          * Get the grid of characters.
          */
-        String chars[][] = new String[height][width];
+        char chars[][] = new char[height][width];
         boolean[][] check = new boolean[height][width];
 
-        String[] inputText = txtInputCharacters.getText().split("\\W+");
+        String inputText = txtInputCharacters.getText();
         int counter = 0;
 
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
-                chars[i][j] = inputText[counter];
+                chars[i][j] = inputText.charAt(i);
                 check[i][j] = true;
                 counter++;
             }
@@ -168,10 +194,10 @@ public class FXMLController implements Initializable {
      * @return String The string containing all the words formed using the given
      * characters, separating by newline characters.
      */
-    private String Solve(String[][] chars, boolean[][] check, int width, int height) {
+    private String Solve(char[][] chars, boolean[][] check, int width, int height) {
         String output = "";
 
-        ArrayList<String> result = new ArrayList<>();
+        ArrayList<Character> result = new ArrayList<>();
 
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
@@ -194,16 +220,17 @@ public class FXMLController implements Initializable {
     /**
      * Find all the permutation of the given grid of characters
      *
-     * @param chars
-     * @param check
-     * @param x
-     * @param y
-     * @param height
-     * @param width
-     * @param result
+     * @param chars Grid of characters.
+     * @param check A boolean grid to check if the character has been used or 
+     * not.
+     * @param x The current x-coordinate of the position.
+     * @param y The current y-coordinate of the position.
+     * @param height The grid's height.
+     * @param width The grid's width.
+     * @param result An ArrayList of strings from which to form the result word.
      */
-    private void permutate(String[][] chars, boolean[][] check,
-            ArrayList<String> result, int x, int y, int height, int width) {
+    private void permutate(char[][] chars, boolean[][] check,
+            ArrayList<Character> result, int x, int y, int height, int width) {
         if (result.size() == wordLength) {
             String formedWord = formWord(result);
 
@@ -262,7 +289,7 @@ public class FXMLController implements Initializable {
      * @param words ArrayList of characters to form a word.
      * @return The formed Word.
      */
-    private String formWord(ArrayList<String> words) {
+    private String formWord(ArrayList<Character> words) {
         String output = "";
         for (int i = 0; i < words.size(); i++) {
             output += words.get(i);
