@@ -10,7 +10,7 @@
 
 <AnchorPane id="AnchorPane" prefHeight="726.0" prefWidth="1152.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="personal.wordbrainsolver.FXMLController">
    <children>
-      <TextArea fx:id="txtInputCharacters" disable="true" layoutX="88.0" layoutY="306.0" onKeyReleased="#txtInputCharacters_KeyReleased" prefHeight="358.0" prefWidth="428.0">
+      <TextArea fx:id="txtInputCharacters" disable="true" layoutX="88.0" layoutY="306.0" prefHeight="358.0" prefWidth="428.0">
          <font>
             <Font name="Monospaced Regular" size="15.0" />
          </font></TextArea>
