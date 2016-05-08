@@ -102,31 +102,37 @@
                     </additionalClasspathElements>
                 </configuration>
             </plugin>
-<!--            <plugin>
-        	<groupId>com.zenjava</groupId>
+            <plugin>
+                <groupId>com.zenjava</groupId>
                 <artifactId>javafx-maven-plugin</artifactId>
                 <version>8.1.4</version>
-        	<configuration>
-                    <mainClass>MainApp</mainClass>
+                <configuration>
+                    <mainClass>personal.wordbrainsolver.MainApp</mainClass>
+                    <target name="CopyJre" depends="CreatingExe"> 
+                        <delete dir="${app_path}/bundles/WordBrainSolver/runtime/jre"/>
+                        <mkdir dir="${app_path}/bundles/WordBrainSolver/runtime/jre"/>
+                        <copy todir="${app_path}/bundles/WordBrainSolverx/runtime/jre">
+                            <fileset dir="${env.JAVA_HOME}/jre" />
+                        </copy>
+                    </target>
                 </configuration>
                 <executions>
                     <execution>
-			 required before build-native 
-			<id>create-jfxjar</id>
-			<phase>package</phase>
-			<goals>
-				<goal>build-jar</goal>
-			</goals>
+                        <id>create-jfxjar</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>build-jar</goal>
+                        </goals>
                     </execution>
-                	<execution>
-			<id>create-native</id>
-			<phase>package</phase>
-			<goals>
-				<goal>build-native</goal>
-                    	</goals>
+                    <execution>
+                        <id>create-native</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>build-native</goal>
+                        </goals>
                     </execution>
                 </executions>
-            </plugin>-->
+            </plugin>
         </plugins>
     </build>
 
