@@ -74,8 +74,8 @@ public class FXMLController implements Initializable {
         /*
 		 * Populate the grid width and height combo boxes
          */
-        cboGridWidth.getItems().addAll(3, 4, 5, 6, 7);
-        cboGridHeight.getItems().addAll(3, 4, 5, 6, 7);
+        cboGridWidth.getItems().addAll(1, 2, 3, 4, 5, 6, 7);
+        cboGridHeight.getItems().addAll(1, 2, 3, 4, 5, 6, 7);
     }
     
     /**
@@ -85,22 +85,7 @@ public class FXMLController implements Initializable {
      * @param event
      */
     @FXML
-    protected void cboGridWidth_Action(ActionEvent event) {
-        boolean isWidthComboBoxEmpty = cboGridWidth.getSelectionModel().isEmpty();
-        boolean isHeightComboBoxEmpty = cboGridHeight.getSelectionModel().isEmpty();
-        
-        if (!isWidthComboBoxEmpty && !isHeightComboBoxEmpty)
-            txtInputCharacters.setDisable(false);
-    }
-    
-    /**
-     * Check if both combo boxes for the grid's width and height are selected.
-     * If yes, enable the characters input area for user to input.
-     * 
-     * @param event
-     */
-    @FXML
-    protected void cboGridHeight_Action(ActionEvent event) {
+    protected void cboGridWidthHeight_Action(ActionEvent event) {
         boolean isWidthComboBoxEmpty = cboGridWidth.getSelectionModel().isEmpty();
         boolean isHeightComboBoxEmpty = cboGridHeight.getSelectionModel().isEmpty();
         
@@ -166,11 +151,12 @@ public class FXMLController implements Initializable {
         boolean[][] check = new boolean[height][width];
 
         String inputText = txtInputCharacters.getText();
+		inputText = inputText.replace("\n", "").replace(" ", "");
         int counter = 0;
 
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
-                chars[i][j] = inputText.charAt(i);
+                chars[i][j] = inputText.charAt(counter);
                 check[i][j] = true;
                 counter++;
             }
@@ -253,7 +239,7 @@ public class FXMLController implements Initializable {
                     int newx = x + offsetX;
                     int newy = y + offsetY;
 
-                    if (inGridBound(newx, newy, height, width)) {
+                    if (inGridBound(newx, newy, height, width))
                         if (check[newx][newy]) {
                             check[newx][newy] = false;
                             result.add(chars[newx][newy]);
@@ -262,7 +248,6 @@ public class FXMLController implements Initializable {
                             check[newx][newy] = true;
                             result.remove(result.size() - 1);
                         }
-                    }
                 }
             }
         }

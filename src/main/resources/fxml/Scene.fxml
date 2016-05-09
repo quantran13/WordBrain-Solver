@@ -10,7 +10,7 @@
 
 <AnchorPane id="AnchorPane" prefHeight="726.0" prefWidth="1152.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="personal.wordbrainsolver.FXMLController">
    <children>
-      <TextArea fx:id="txtInputCharacters" disable="true" layoutX="88.0" layoutY="306.0" prefHeight="358.0" prefWidth="428.0">
+      <TextArea fx:id="txtInputCharacters" disable="true" layoutX="88.0" layoutY="306.0" onInputMethodTextChanged="#cboGridWidthHeight_Action" prefHeight="358.0" prefWidth="428.0">
          <font>
             <Font name="Monospaced Regular" size="15.0" />
          </font></TextArea>
@@ -27,8 +27,8 @@
          </image></ImageView>
       <Label layoutX="642.0" layoutY="238.0" text="Width: " />
       <Label layoutX="868.0" layoutY="238.0" text="Height: " />
-      <ComboBox fx:id="cboGridWidth" layoutX="690.0" layoutY="233.0" onAction="#cboGridWidth_Action" prefWidth="150.0" />
-      <ComboBox fx:id="cboGridHeight" layoutX="920.0" layoutY="233.0" onAction="#cboGridHeight_Action" prefWidth="150.0" />
+      <ComboBox fx:id="cboGridWidth" layoutX="690.0" layoutY="233.0" onAction="#cboGridWidthHeight_Action" prefWidth="150.0" />
+      <ComboBox fx:id="cboGridHeight" layoutX="920.0" layoutY="233.0" onAction="#cboGridWidthHeight_Action" prefWidth="150.0" />
       <Separator layoutX="3.0" layoutY="174.0" prefHeight="25.0" prefWidth="1149.0" />
       <Label layoutX="260.0" layoutY="80.0" text="Solver">
          <font>
