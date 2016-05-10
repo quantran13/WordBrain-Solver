@@ -15,6 +15,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -119,6 +120,35 @@ public class FXMLController implements Initializable {
              */
             textFieldGrid.clear();
             inputAnchorPane.getChildren().clear();
+            
+            
+            // Filter out characters that are not letters nor blank space,
+            // which is denoted by a dot, or prevent characters from being 
+            // inputted if the text field has already been filled.
+            EventHandler letterFilter = new EventHandler<KeyEvent> () {
+                @Override
+                public void handle(KeyEvent event) {
+                    String text = event.getCharacter();
+                    
+                    if (text.length() > 0) {
+                        char c = text.charAt(0);
+                        boolean isLowercase = (c >= 'a' && c <= 'z');
+                        boolean isUppercase = (c >= 'A' && c <= 'Z');
+                        boolean isLetter = isUppercase || isLowercase;
+                        
+                        boolean isBlank = (c == '.');
+                        
+                        TextField sourceField = (TextField) event.getSource();
+                        boolean hasExceeded = (sourceField.getText().length() != 0);
+                        
+                        if ((!isLetter && !isBlank) || hasExceeded)
+                            event.consume();
+                    } else {
+                        event.consume();
+                    }
+                }  
+            };
+            
 
             for (int i = 0; i < height; i++) {
                 ArrayList<TextField> row = new ArrayList<>();
@@ -129,27 +159,7 @@ public class FXMLController implements Initializable {
                     newTextField.setLayoutY(currentY);
                     newTextField.setMaxSize(30, 20);
 
-                    newTextField.addEventFilter(KeyEvent.KEY_TYPED, new EventHandler<KeyEvent>() {
-                        @Override
-                        public void handle(KeyEvent event) {
-                            String text = event.getCharacter();
-
-                            if (text.length() > 0) {
-                                char c = text.charAt(0);
-                                boolean isLetter = ((c >= 'a' && c <= 'z') || (c > 'A' && c < 'Z'));
-
-                                TextField sourceField = (TextField) event.getSource();
-                                boolean hasExceeded = (sourceField.getText().length() != 0);
-
-                                if (!isLetter || hasExceeded) {
-                                    event.consume();
-                                }
-                            } else {
-                                event.consume();
-                            }
-                        }
-
-                    });
+                    newTextField.addEventFilter(KeyEvent.KEY_TYPED, letterFilter);
 
                     row.add(newTextField);
                     inputAnchorPane.getChildren().add(row.get(k));
