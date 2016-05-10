@@ -8,17 +8,13 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane id="AnchorPane" prefHeight="726.0" prefWidth="1152.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="personal.wordbrainsolver.FXMLController">
+<AnchorPane id="AnchorPane" fx:id="mainAnchor" prefHeight="726.0" prefWidth="1152.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="personal.wordbrainsolver.FXMLController">
    <children>
-      <TextArea fx:id="txtInputCharacters" disable="true" layoutX="88.0" layoutY="306.0" onInputMethodTextChanged="#cboGridWidthHeight_Action" prefHeight="358.0" prefWidth="428.0">
-         <font>
-            <Font name="Monospaced Regular" size="15.0" />
-         </font></TextArea>
       <TextArea fx:id="txtOutputWords" editable="false" layoutX="643.0" layoutY="306.0" prefHeight="358.0" prefWidth="428.0" />
       <Button fx:id="btnSolve" layoutX="526.0" layoutY="306.0" mnemonicParsing="false" onAction="#btnSolve_Click" prefHeight="31.0" prefWidth="108.0" text="Solve!" />
       <TextField fx:id="txtWordLength" layoutX="88.0" layoutY="233.0" prefHeight="25.0" prefWidth="428.0" />
       <Label layoutX="88.0" layoutY="205.0" text="Word length:" />
-      <Label layoutX="88.0" layoutY="278.0" text="Input characters:" />
+      <Label fx:id="lblInputCharacters" layoutX="88.0" layoutY="278.0" text="Input characters:" />
       <Label layoutX="643.0" layoutY="278.0" text="Output words:" />
       <Label layoutX="642.0" layoutY="205.0" text="Dimensions:" />
       <ImageView fitHeight="143.0" fitWidth="295.0" layoutX="88.0" layoutY="30.0" pickOnBounds="true" preserveRatio="true">
@@ -35,5 +31,6 @@
             <Font name="Georgia Bold" size="40.0" />
          </font>
       </Label>
+      <AnchorPane fx:id="inputAnchorPane" layoutX="88.0" layoutY="306.0" prefHeight="358.0" prefWidth="428.0" />
    </children>
 </AnchorPane>

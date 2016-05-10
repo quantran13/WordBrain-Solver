@@ -15,22 +15,29 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.AnchorPane;
 
 public class FXMLController implements Initializable {
 
     private HashMap<String, Integer> dictionary;
     private final HashMap<String, Integer> wordsResult;
     private int wordLength;
+	
+	private ArrayList<ArrayList<TextField>> textFieldGrid;
 
-    @FXML
-    private TextArea txtInputCharacters;
+	@FXML
+	private AnchorPane inputAnchorPane;
     @FXML
     private TextArea txtOutputWords;
     @FXML
@@ -44,6 +51,8 @@ public class FXMLController implements Initializable {
         this.wordLength = 0;
         this.dictionary = new HashMap<>();
         this.wordsResult = new HashMap<>();
+		
+		this.textFieldGrid = new ArrayList<>();
     }
 
     @Override
@@ -89,8 +98,70 @@ public class FXMLController implements Initializable {
         boolean isWidthComboBoxEmpty = cboGridWidth.getSelectionModel().isEmpty();
         boolean isHeightComboBoxEmpty = cboGridHeight.getSelectionModel().isEmpty();
         
-        if (!isWidthComboBoxEmpty && !isHeightComboBoxEmpty)
-            txtInputCharacters.setDisable(false);
+        if (!isWidthComboBoxEmpty && !isHeightComboBoxEmpty) {
+			/*
+			 * Get the width and height.
+			 */
+			int width = cboGridWidth.getValue();
+			int height = cboGridHeight.getValue();
+			
+			/*
+			 * Get the input characters label's position to determine the
+			 * starting position to draw the input text fields for the grid.
+			 */
+			double startingPosY = 0;
+			double startingPosX = 0;
+			
+			double currentX = startingPosX;
+			double currentY = startingPosY;
+			
+			/*
+			 * Create text fields to input puzzle information.
+			 */
+			textFieldGrid.clear();
+			inputAnchorPane.getChildren().clear();
+			
+			for (int i = 0; i < height; i++) {
+				ArrayList<TextField> row = new ArrayList<>();
+				
+				for (int k = 0; k < width; k++) {
+					TextField newTextField = new TextField();
+					newTextField.setLayoutX(currentX);
+					newTextField.setLayoutY(currentY);
+					newTextField.setMaxSize(30, 20);
+					
+					newTextField.addEventFilter(KeyEvent.KEY_TYPED, new EventHandler<KeyEvent>() {
+						@Override
+						public void handle(KeyEvent event) {
+							String text = event.getCharacter();
+							
+							if (text.length() > 0) {
+								char c = text.charAt(0);
+								boolean isLetter = ((c >= 'a' && c <= 'z') || (c > 'A' && c < 'Z'));
+								
+								TextField sourceField = (TextField) event.getSource();
+								boolean hasExceeded = (sourceField.getText().length() != 0);
+								
+								if (!isLetter || hasExceeded)
+									event.consume();
+							} else {
+								event.consume();
+							}
+						}
+						
+					});
+					
+					row.add(newTextField);
+					inputAnchorPane.getChildren().add(row.get(k));
+					
+					currentX += 50;
+				}
+				
+				textFieldGrid.add(row);
+				currentY += 40;
+				currentX = startingPosX;
+			}
+		}
     }
 
     /**
@@ -149,18 +220,26 @@ public class FXMLController implements Initializable {
          */
         char chars[][] = new char[height][width];
         boolean[][] check = new boolean[height][width];
-
-        String inputText = txtInputCharacters.getText();
-		inputText = inputText.replace("\n", "").replace(" ", "");
-        int counter = 0;
-
-        for (int i = 0; i < height; i++) {
-            for (int j = 0; j < width; j++) {
-                chars[i][j] = inputText.charAt(counter);
-                check[i][j] = true;
-                counter++;
-            }
-        }
+		boolean invalid = false;
+		
+		for (int i = 0; i < height; i++) {
+			for (int k = 0; k < width; k++) {
+				String text = textFieldGrid.get(i).get(k).getText();
+				
+				if (text.length() == 1) {
+					char c = text.charAt(0);
+					chars[i][k] = c;
+					check[i][k] = true;
+				} else {
+					showErrorMessage("Incomplete input", "You have not entered"
+						+ " all the characters!", AlertType.ERROR, false);
+					invalid = true;
+					break;
+				}
+			}
+			
+			if (invalid) break;
+		}
 
         // Solve
         String output = Solve(chars, check, width, height);
