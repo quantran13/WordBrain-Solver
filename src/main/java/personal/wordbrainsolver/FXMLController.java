@@ -86,7 +86,8 @@ public class FXMLController implements Initializable {
     }
 
     /**
-     * Check if both combo boxes for the grid's width and height are selected. If yes, enable the characters input area for user to input.
+     * Check if both combo boxes for the grid's width and height are selected.
+     * If yes, enable the characters input area for user to input.
      *
      * @param event
      */
