@@ -15,17 +15,14 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 
@@ -35,7 +32,7 @@ public class FXMLController implements Initializable {
     private final HashMap<String, Integer> wordsResult;
     private int wordLength;
 
-    private ArrayList<ArrayList<TextField>> textFieldGrid;
+    private final ArrayList<ArrayList<TextField>> textFieldGrid;
 
     @FXML
     private AnchorPane inputAnchorPane;
@@ -60,7 +57,7 @@ public class FXMLController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
 
         /*
-		 * Read the dictionary and store in a hashmap
+         * Read the dictionary and store in a hashmap
          */
         String dictionaryFile = "dictionary.txt";
 
@@ -82,7 +79,7 @@ public class FXMLController implements Initializable {
         }
 
         /*
-		 * Populate the grid width and height combo boxes
+         * Populate the grid width and height combo boxes
          */
         cboGridWidth.getItems().addAll(1, 2, 3, 4, 5, 6, 7);
         cboGridHeight.getItems().addAll(1, 2, 3, 4, 5, 6, 7);
@@ -100,14 +97,14 @@ public class FXMLController implements Initializable {
 
         if (!isWidthComboBoxEmpty && !isHeightComboBoxEmpty) {
             /*
-			 * Get the width and height.
+             * Get the width and height.
              */
             int width = cboGridWidth.getValue();
             int height = cboGridHeight.getValue();
 
             /*
-			 * Get the input characters label's position to determine the
-			 * starting position to draw the input text fields for the grid.
+             * Get the input characters label's position to determine the
+             * starting position to draw the input text fields for the grid.
              */
             double startingPosY = 0;
             double startingPosX = 0;
@@ -116,7 +113,7 @@ public class FXMLController implements Initializable {
             double currentY = startingPosY;
 
             /*
-			 * Create text fields to input puzzle information.
+             * Create text fields to input puzzle information.
              */
             textFieldGrid.clear();
             inputAnchorPane.getChildren().clear();
