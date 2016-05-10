@@ -257,13 +257,15 @@ public class FXMLController implements Initializable {
     }
 
     /**
-     * Solve the given input text and output words that are formed using the given characters.
+     * Solve the given input text and output words that are formed using 
+     * the given characters.
      *
      * @param chars Grid of characters.
      * @param width The grid's width.
      * @param height The grid's height.
      *
-     * @return String The string containing all the words formed using the given characters, separating by newline characters.
+     * @return String The string containing all the words formed using 
+     * the given characters, separating by newline characters.
      */
     private String Solve(char[][] chars, boolean[][] check, int width, int height) {
         String output = "";
@@ -328,7 +330,8 @@ public class FXMLController implements Initializable {
                             check[newx][newy] = false;
                             result.add(chars[newx][newy]);
 
-                            permutate(chars, check, result, newx, newy, height, width);
+                            permutate(chars, check, result, newx, newy, 
+                                height, width);
                             check[newx][newy] = true;
                             result.remove(result.size() - 1);
                         }
@@ -402,7 +405,8 @@ public class FXMLController implements Initializable {
         throws FileNotFoundException, IOException, URISyntaxException {
         // Open the dictionary file and store information in a hashmap.
 
-        try (InputStream instream = getClass().getClassLoader().getResourceAsStream(fileName);
+        try (InputStream instream = getClass().getClassLoader().
+                getResourceAsStream(fileName);
             InputStreamReader infile = new InputStreamReader(instream);
             BufferedReader inBuffer = new BufferedReader(infile)) {
             HashMap<String, Integer> dict = new HashMap<>();
