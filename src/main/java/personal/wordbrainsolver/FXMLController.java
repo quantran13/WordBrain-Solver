@@ -33,11 +33,11 @@ public class FXMLController implements Initializable {
     private HashMap<String, Integer> dictionary;
     private final HashMap<String, Integer> wordsResult;
     private int wordLength;
-	
-	private ArrayList<ArrayList<TextField>> textFieldGrid;
 
-	@FXML
-	private AnchorPane inputAnchorPane;
+    private ArrayList<ArrayList<TextField>> textFieldGrid;
+
+    @FXML
+    private AnchorPane inputAnchorPane;
     @FXML
     private TextArea txtOutputWords;
     @FXML
@@ -51,8 +51,8 @@ public class FXMLController implements Initializable {
         this.wordLength = 0;
         this.dictionary = new HashMap<>();
         this.wordsResult = new HashMap<>();
-		
-		this.textFieldGrid = new ArrayList<>();
+
+        this.textFieldGrid = new ArrayList<>();
     }
 
     @Override
@@ -62,7 +62,7 @@ public class FXMLController implements Initializable {
 		 * Read the dictionary and store in a hashmap
          */
         String dictionaryFile = "dictionary.txt";
-        
+
         try {
             dictionary = readDictionary(dictionaryFile);
         } catch (IOException ex) {
@@ -86,82 +86,82 @@ public class FXMLController implements Initializable {
         cboGridWidth.getItems().addAll(1, 2, 3, 4, 5, 6, 7);
         cboGridHeight.getItems().addAll(1, 2, 3, 4, 5, 6, 7);
     }
-    
+
     /**
-     * Check if both combo boxes for the grid's width and height are selected.
-     * If yes, enable the characters input area for user to input.
-     * 
+     * Check if both combo boxes for the grid's width and height are selected. If yes, enable the characters input area for user to input.
+     *
      * @param event
      */
     @FXML
     protected void cboGridWidthHeight_Action(ActionEvent event) {
         boolean isWidthComboBoxEmpty = cboGridWidth.getSelectionModel().isEmpty();
         boolean isHeightComboBoxEmpty = cboGridHeight.getSelectionModel().isEmpty();
-        
+
         if (!isWidthComboBoxEmpty && !isHeightComboBoxEmpty) {
-			/*
+            /*
 			 * Get the width and height.
-			 */
-			int width = cboGridWidth.getValue();
-			int height = cboGridHeight.getValue();
-			
-			/*
+             */
+            int width = cboGridWidth.getValue();
+            int height = cboGridHeight.getValue();
+
+            /*
 			 * Get the input characters label's position to determine the
 			 * starting position to draw the input text fields for the grid.
-			 */
-			double startingPosY = 0;
-			double startingPosX = 0;
-			
-			double currentX = startingPosX;
-			double currentY = startingPosY;
-			
-			/*
+             */
+            double startingPosY = 0;
+            double startingPosX = 0;
+
+            double currentX = startingPosX;
+            double currentY = startingPosY;
+
+            /*
 			 * Create text fields to input puzzle information.
-			 */
-			textFieldGrid.clear();
-			inputAnchorPane.getChildren().clear();
-			
-			for (int i = 0; i < height; i++) {
-				ArrayList<TextField> row = new ArrayList<>();
-				
-				for (int k = 0; k < width; k++) {
-					TextField newTextField = new TextField();
-					newTextField.setLayoutX(currentX);
-					newTextField.setLayoutY(currentY);
-					newTextField.setMaxSize(30, 20);
-					
-					newTextField.addEventFilter(KeyEvent.KEY_TYPED, new EventHandler<KeyEvent>() {
-						@Override
-						public void handle(KeyEvent event) {
-							String text = event.getCharacter();
-							
-							if (text.length() > 0) {
-								char c = text.charAt(0);
-								boolean isLetter = ((c >= 'a' && c <= 'z') || (c > 'A' && c < 'Z'));
-								
-								TextField sourceField = (TextField) event.getSource();
-								boolean hasExceeded = (sourceField.getText().length() != 0);
-								
-								if (!isLetter || hasExceeded)
-									event.consume();
-							} else {
-								event.consume();
-							}
-						}
-						
-					});
-					
-					row.add(newTextField);
-					inputAnchorPane.getChildren().add(row.get(k));
-					
-					currentX += 50;
-				}
-				
-				textFieldGrid.add(row);
-				currentY += 40;
-				currentX = startingPosX;
-			}
-		}
+             */
+            textFieldGrid.clear();
+            inputAnchorPane.getChildren().clear();
+
+            for (int i = 0; i < height; i++) {
+                ArrayList<TextField> row = new ArrayList<>();
+
+                for (int k = 0; k < width; k++) {
+                    TextField newTextField = new TextField();
+                    newTextField.setLayoutX(currentX);
+                    newTextField.setLayoutY(currentY);
+                    newTextField.setMaxSize(30, 20);
+
+                    newTextField.addEventFilter(KeyEvent.KEY_TYPED, new EventHandler<KeyEvent>() {
+                        @Override
+                        public void handle(KeyEvent event) {
+                            String text = event.getCharacter();
+
+                            if (text.length() > 0) {
+                                char c = text.charAt(0);
+                                boolean isLetter = ((c >= 'a' && c <= 'z') || (c > 'A' && c < 'Z'));
+
+                                TextField sourceField = (TextField) event.getSource();
+                                boolean hasExceeded = (sourceField.getText().length() != 0);
+
+                                if (!isLetter || hasExceeded) {
+                                    event.consume();
+                                }
+                            } else {
+                                event.consume();
+                            }
+                        }
+
+                    });
+
+                    row.add(newTextField);
+                    inputAnchorPane.getChildren().add(row.get(k));
+
+                    currentX += 50;
+                }
+
+                textFieldGrid.add(row);
+                currentY += 40;
+                currentX = startingPosX;
+            }
+        }
     }
 
     /**
@@ -188,7 +188,7 @@ public class FXMLController implements Initializable {
         } catch (NumberFormatException ex) {
             // If the user hasn't chosen the width/length.
             showErrorMessage("Invalid width/height", "You didn't provide the "
-                    + "puzzle's width/length!", AlertType.ERROR, false);
+                + "puzzle's width/length!", AlertType.ERROR, false);
         }
 
         /*
@@ -199,7 +199,7 @@ public class FXMLController implements Initializable {
         // Error messages in case an invalid word length is entered
         String title = "Word length input error";
         String message = "Please input a valid word length in the form "
-                + "of an unsigned integer!";
+            + "of an unsigned integer!";
 
         // Get the word length or show an error message if the word length is
         // invalid
@@ -220,26 +220,28 @@ public class FXMLController implements Initializable {
          */
         char chars[][] = new char[height][width];
         boolean[][] check = new boolean[height][width];
-		boolean invalid = false;
-		
-		for (int i = 0; i < height; i++) {
-			for (int k = 0; k < width; k++) {
-				String text = textFieldGrid.get(i).get(k).getText();
-				
-				if (text.length() == 1) {
-					char c = text.charAt(0);
-					chars[i][k] = c;
-					check[i][k] = true;
-				} else {
-					showErrorMessage("Incomplete input", "You have not entered"
-						+ " all the characters!", AlertType.ERROR, false);
-					invalid = true;
-					break;
-				}
-			}
-			
-			if (invalid) break;
-		}
+        boolean invalid = false;
+
+        for (int i = 0; i < height; i++) {
+            for (int k = 0; k < width; k++) {
+                String text = textFieldGrid.get(i).get(k).getText();
+
+                if (text.length() == 1) {
+                    char c = text.charAt(0);
+                    chars[i][k] = c;
+                    check[i][k] = true;
+                } else {
+                    showErrorMessage("Incomplete input", "You have not entered"
+                        + " all the characters!", AlertType.ERROR, false);
+                    invalid = true;
+                    break;
+                }
+            }
+
+            if (invalid) {
+                break;
+            }
+        }
 
         // Solve
         String output = Solve(chars, check, width, height);
@@ -249,15 +251,13 @@ public class FXMLController implements Initializable {
     }
 
     /**
-     * Solve the given input text and output words that are formed using the
-     * given characters.
+     * Solve the given input text and output words that are formed using the given characters.
      *
      * @param chars Grid of characters.
      * @param width The grid's width.
      * @param height The grid's height.
      *
-     * @return String The string containing all the words formed using the given
-     * characters, separating by newline characters.
+     * @return String The string containing all the words formed using the given characters, separating by newline characters.
      */
     private String Solve(char[][] chars, boolean[][] check, int width, int height) {
         String output = "";
@@ -286,8 +286,7 @@ public class FXMLController implements Initializable {
      * Find all the permutation of the given grid of characters
      *
      * @param chars Grid of characters.
-     * @param check A boolean grid to check if the character has been used or 
-     * not.
+     * @param check A boolean grid to check if the character has been used or not.
      * @param x The current x-coordinate of the position.
      * @param y The current y-coordinate of the position.
      * @param height The grid's height.
@@ -295,7 +294,7 @@ public class FXMLController implements Initializable {
      * @param result An ArrayList of strings from which to form the result word.
      */
     private void permutate(char[][] chars, boolean[][] check,
-            ArrayList<Character> result, int x, int y, int height, int width) {
+        ArrayList<Character> result, int x, int y, int height, int width) {
         if (result.size() == wordLength) {
             String formedWord = formWord(result);
 
@@ -318,7 +317,7 @@ public class FXMLController implements Initializable {
                     int newx = x + offsetX;
                     int newy = y + offsetY;
 
-                    if (inGridBound(newx, newy, height, width))
+                    if (inGridBound(newx, newy, height, width)) {
                         if (check[newx][newy]) {
                             check[newx][newy] = false;
                             result.add(chars[newx][newy]);
@@ -327,6 +326,7 @@ public class FXMLController implements Initializable {
                             check[newx][newy] = true;
                             result.remove(result.size() - 1);
                         }
+                    }
                 }
             }
         }
@@ -340,8 +340,7 @@ public class FXMLController implements Initializable {
      * @param height The grid's height.
      * @param width The grid's width.
      *
-     * @return True if the given position is in the grid's bound, false
-     * otherwise.
+     * @return True if the given position is in the grid's bound, false otherwise.
      */
     private boolean inGridBound(int x, int y, int height, int width) {
         return (x >= 0 && x < height && y >= 0 && y < width);
@@ -371,7 +370,7 @@ public class FXMLController implements Initializable {
      * @param exit True if exit the program after showing the message.
      */
     protected void showErrorMessage(String title, String message,
-            AlertType type, boolean exit) {
+        AlertType type, boolean exit) {
         Alert alert = new Alert(type);
 
         alert.setTitle(title);
@@ -394,12 +393,12 @@ public class FXMLController implements Initializable {
      * @throws IOException If there is an error while reading the file.
      */
     private HashMap<String, Integer> readDictionary(String fileName)
-            throws FileNotFoundException, IOException, URISyntaxException {
+        throws FileNotFoundException, IOException, URISyntaxException {
         // Open the dictionary file and store information in a hashmap.
-       
+
         try (InputStream instream = getClass().getClassLoader().getResourceAsStream(fileName);
-                InputStreamReader infile = new InputStreamReader(instream);
-                BufferedReader inBuffer = new BufferedReader(infile)) {
+            InputStreamReader infile = new InputStreamReader(instream);
+            BufferedReader inBuffer = new BufferedReader(infile)) {
             HashMap<String, Integer> dict = new HashMap<>();
 
             String line;
