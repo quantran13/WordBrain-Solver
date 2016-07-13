@@ -15,13 +15,17 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.AnchorPane;
 
 public class FXMLController implements Initializable {
 
@@ -29,8 +33,10 @@ public class FXMLController implements Initializable {
     private final HashMap<String, Integer> wordsResult;
     private int wordLength;
 
+    private final ArrayList<ArrayList<TextField>> textFieldGrid;
+
     @FXML
-    private TextArea txtInputCharacters;
+    private AnchorPane inputAnchorPane;
     @FXML
     private TextArea txtOutputWords;
     @FXML
@@ -44,16 +50,18 @@ public class FXMLController implements Initializable {
         this.wordLength = 0;
         this.dictionary = new HashMap<>();
         this.wordsResult = new HashMap<>();
+
+        this.textFieldGrid = new ArrayList<>();
     }
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 
         /*
-		 * Read the dictionary and store in a hashmap
+         * Read the dictionary and store in a hashmap
          */
         String dictionaryFile = "dictionary.txt";
-        
+
         try {
             dictionary = readDictionary(dictionaryFile);
         } catch (IOException ex) {
@@ -72,25 +80,120 @@ public class FXMLController implements Initializable {
         }
 
         /*
-		 * Populate the grid width and height combo boxes
+         * Populate the grid width and height combo boxes
          */
         cboGridWidth.getItems().addAll(1, 2, 3, 4, 5, 6, 7);
         cboGridHeight.getItems().addAll(1, 2, 3, 4, 5, 6, 7);
     }
-    
+
     /**
      * Check if both combo boxes for the grid's width and height are selected.
      * If yes, enable the characters input area for user to input.
-     * 
+     *
      * @param event
      */
     @FXML
     protected void cboGridWidthHeight_Action(ActionEvent event) {
         boolean isWidthComboBoxEmpty = cboGridWidth.getSelectionModel().isEmpty();
         boolean isHeightComboBoxEmpty = cboGridHeight.getSelectionModel().isEmpty();
-        
-        if (!isWidthComboBoxEmpty && !isHeightComboBoxEmpty)
-            txtInputCharacters.setDisable(false);
+
+        if (!isWidthComboBoxEmpty && !isHeightComboBoxEmpty) {
+            /*
+             * Get the width and height.
+             */
+            int width = cboGridWidth.getValue();
+            int height = cboGridHeight.getValue();
+
+            /*
+             * Get the input characters label's position to determine the
+             * starting position to draw the input text fields for the grid.
+             */
+            double startingPosY = 0;
+            double startingPosX = 0;
+
+            double currentX = startingPosX;
+            double currentY = startingPosY;
+
+            /*
+             * Create text fields to input puzzle information.
+             */
+            textFieldGrid.clear();
+            inputAnchorPane.getChildren().clear();
+
+            // Filter out characters that are not letters nor blank space,
+            // which is denoted by a dot, or prevent characters from being 
+            // inputted if the text field has already been filled.
+            EventHandler letterFilter = new EventHandler<KeyEvent>() {
+                @Override
+                public void handle(KeyEvent event) {
+                    String text = event.getCharacter();
+
+                    if (text.length() > 0) {
+                        char c = text.charAt(0);
+                        boolean isLowercase = (c >= 'a' && c <= 'z');
+                        boolean isUppercase = (c >= 'A' && c <= 'Z');
+                        boolean isLetter = isUppercase || isLowercase;
+
+                        boolean isBlank = (c == '.');
+
+                        TextField sourceField = (TextField) event.getSource();
+                        boolean hasExceeded = (sourceField.getText().length() != 0);
+
+                        if ((!isLetter && !isBlank) || hasExceeded) {
+                            event.consume();
+                        }
+                    } else {
+                        event.consume();
+                    }
+                }
+            };
+
+            for (int i = 0; i < height; i++) {
+                ArrayList<TextField> row = new ArrayList<>();
+
+                for (int k = 0; k < width; k++) {
+                    TextField newTextField = new TextField();
+                    newTextField.setLayoutX(currentX);
+                    newTextField.setLayoutY(currentY);
+                    newTextField.setMaxSize(30, 20);
+
+                    newTextField.addEventFilter(KeyEvent.KEY_TYPED, letterFilter);
+
+                    row.add(newTextField);
+                    inputAnchorPane.getChildren().add(row.get(k));
+
+                    currentX += 50;
+                }
+
+                textFieldGrid.add(row);
+                currentY += 40;
+                currentX = startingPosX;
+            }
+        }
+    }
+
+    /**
+     * Clear the input character grid.
+     *
+     * @param event The button click event.
+     */
+    @FXML
+    protected void btnClearInput_Click(ActionEvent event) {
+        for (int i = 0; i < this.textFieldGrid.size(); i++) {
+            for (int j = 0; j < this.textFieldGrid.get(i).size(); j++) {
+                textFieldGrid.get(i).get(j).clear();
+            }
+        }
+    }
+
+    /**
+     * Clear the output text area.
+     *
+     * @param event The button click event.
+     */
+    @FXML
+    protected void btnClearOutput_Click(ActionEvent event) {
+        this.txtOutputWords.clear();
     }
 
     /**
@@ -149,16 +252,26 @@ public class FXMLController implements Initializable {
          */
         char chars[][] = new char[height][width];
         boolean[][] check = new boolean[height][width];
-
-        String inputText = txtInputCharacters.getText();
-		inputText = inputText.replace("\n", "").replace(" ", "");
-        int counter = 0;
+        boolean invalid = false;
 
         for (int i = 0; i < height; i++) {
-            for (int j = 0; j < width; j++) {
-                chars[i][j] = inputText.charAt(counter);
-                check[i][j] = true;
-                counter++;
+            for (int k = 0; k < width; k++) {
+                String text = textFieldGrid.get(i).get(k).getText();
+
+                if (text.length() == 1) {
+                    char c = text.charAt(0);
+                    chars[i][k] = c;
+                    check[i][k] = true;
+                } else {
+                    showErrorMessage("Incomplete input", "You have not entered"
+                            + " all the characters!", AlertType.ERROR, false);
+                    invalid = true;
+                    break;
+                }
+            }
+
+            if (invalid) {
+                break;
             }
         }
 
@@ -207,7 +320,7 @@ public class FXMLController implements Initializable {
      * Find all the permutation of the given grid of characters
      *
      * @param chars Grid of characters.
-     * @param check A boolean grid to check if the character has been used or 
+     * @param check A boolean grid to check if the character has been used or
      * not.
      * @param x The current x-coordinate of the position.
      * @param y The current y-coordinate of the position.
@@ -239,15 +352,17 @@ public class FXMLController implements Initializable {
                     int newx = x + offsetX;
                     int newy = y + offsetY;
 
-                    if (inGridBound(newx, newy, height, width))
+                    if (inGridBound(newx, newy, height, width)) {
                         if (check[newx][newy]) {
                             check[newx][newy] = false;
                             result.add(chars[newx][newy]);
 
-                            permutate(chars, check, result, newx, newy, height, width);
+                            permutate(chars, check, result, newx, newy,
+                                    height, width);
                             check[newx][newy] = true;
                             result.remove(result.size() - 1);
                         }
+                    }
                 }
             }
         }
@@ -317,8 +432,9 @@ public class FXMLController implements Initializable {
     private HashMap<String, Integer> readDictionary(String fileName)
             throws FileNotFoundException, IOException, URISyntaxException {
         // Open the dictionary file and store information in a hashmap.
-       
-        try (InputStream instream = getClass().getClassLoader().getResourceAsStream(fileName);
+
+        try (InputStream instream = getClass().getClassLoader().
+                getResourceAsStream(fileName);
                 InputStreamReader infile = new InputStreamReader(instream);
                 BufferedReader inBuffer = new BufferedReader(infile)) {
             HashMap<String, Integer> dict = new HashMap<>();
