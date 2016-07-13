@@ -4,7 +4,7 @@
 
     <groupId>personal</groupId>
     <artifactId>WordBrainSolver</artifactId>
-    <version>0.1-DEMO</version>
+    <version>1.0.0</version>
     <packaging>jar</packaging>
 
     <name>WordBrainSolver</name>
@@ -102,7 +102,7 @@
                     </additionalClasspathElements>
                 </configuration>
             </plugin>
-<!--            <plugin>
+            <plugin>
                 <groupId>com.zenjava</groupId>
                 <artifactId>javafx-maven-plugin</artifactId>
                 <version>8.1.4</version>
@@ -132,7 +132,7 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>-->
+            </plugin>
         </plugins>
     </build>
 

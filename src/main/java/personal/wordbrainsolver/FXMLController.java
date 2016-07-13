@@ -20,6 +20,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -172,6 +173,30 @@ public class FXMLController implements Initializable {
     }
 
     /**
+     * Clear the input character grid.
+     *
+     * @param event The button click event.
+     */
+    @FXML
+    protected void btnClearInput_Click(ActionEvent event) {
+        for (int i = 0; i < this.textFieldGrid.size(); i++) {
+            for (int j = 0; j < this.textFieldGrid.get(i).size(); j++) {
+                textFieldGrid.get(i).get(j).clear();
+            }
+        }
+    }
+
+    /**
+     * Clear the output text area.
+     *
+     * @param event The button click event.
+     */
+    @FXML
+    protected void btnClearOutput_Click(ActionEvent event) {
+        this.txtOutputWords.clear();
+    }
+
+    /**
      * Handle the solve button click event.
      *
      * @param event The button click event.
@@ -195,7 +220,7 @@ public class FXMLController implements Initializable {
         } catch (NumberFormatException ex) {
             // If the user hasn't chosen the width/length.
             showErrorMessage("Invalid width/height", "You didn't provide the "
-                + "puzzle's width/length!", AlertType.ERROR, false);
+                    + "puzzle's width/length!", AlertType.ERROR, false);
         }
 
         /*
@@ -206,7 +231,7 @@ public class FXMLController implements Initializable {
         // Error messages in case an invalid word length is entered
         String title = "Word length input error";
         String message = "Please input a valid word length in the form "
-            + "of an unsigned integer!";
+                + "of an unsigned integer!";
 
         // Get the word length or show an error message if the word length is
         // invalid
@@ -239,7 +264,7 @@ public class FXMLController implements Initializable {
                     check[i][k] = true;
                 } else {
                     showErrorMessage("Incomplete input", "You have not entered"
-                        + " all the characters!", AlertType.ERROR, false);
+                            + " all the characters!", AlertType.ERROR, false);
                     invalid = true;
                     break;
                 }
@@ -258,15 +283,15 @@ public class FXMLController implements Initializable {
     }
 
     /**
-     * Solve the given input text and output words that are formed using 
-     * the given characters.
+     * Solve the given input text and output words that are formed using the
+     * given characters.
      *
      * @param chars Grid of characters.
      * @param width The grid's width.
      * @param height The grid's height.
      *
-     * @return String The string containing all the words formed using 
-     * the given characters, separating by newline characters.
+     * @return String The string containing all the words formed using the given
+     * characters, separating by newline characters.
      */
     private String Solve(char[][] chars, boolean[][] check, int width, int height) {
         String output = "";
@@ -295,7 +320,8 @@ public class FXMLController implements Initializable {
      * Find all the permutation of the given grid of characters
      *
      * @param chars Grid of characters.
-     * @param check A boolean grid to check if the character has been used or not.
+     * @param check A boolean grid to check if the character has been used or
+     * not.
      * @param x The current x-coordinate of the position.
      * @param y The current y-coordinate of the position.
      * @param height The grid's height.
@@ -303,7 +329,7 @@ public class FXMLController implements Initializable {
      * @param result An ArrayList of strings from which to form the result word.
      */
     private void permutate(char[][] chars, boolean[][] check,
-        ArrayList<Character> result, int x, int y, int height, int width) {
+            ArrayList<Character> result, int x, int y, int height, int width) {
         if (result.size() == wordLength) {
             String formedWord = formWord(result);
 
@@ -331,8 +357,8 @@ public class FXMLController implements Initializable {
                             check[newx][newy] = false;
                             result.add(chars[newx][newy]);
 
-                            permutate(chars, check, result, newx, newy, 
-                                height, width);
+                            permutate(chars, check, result, newx, newy,
+                                    height, width);
                             check[newx][newy] = true;
                             result.remove(result.size() - 1);
                         }
@@ -350,7 +376,8 @@ public class FXMLController implements Initializable {
      * @param height The grid's height.
      * @param width The grid's width.
      *
-     * @return True if the given position is in the grid's bound, false otherwise.
+     * @return True if the given position is in the grid's bound, false
+     * otherwise.
      */
     private boolean inGridBound(int x, int y, int height, int width) {
         return (x >= 0 && x < height && y >= 0 && y < width);
@@ -380,7 +407,7 @@ public class FXMLController implements Initializable {
      * @param exit True if exit the program after showing the message.
      */
     protected void showErrorMessage(String title, String message,
-        AlertType type, boolean exit) {
+            AlertType type, boolean exit) {
         Alert alert = new Alert(type);
 
         alert.setTitle(title);
@@ -403,13 +430,13 @@ public class FXMLController implements Initializable {
      * @throws IOException If there is an error while reading the file.
      */
     private HashMap<String, Integer> readDictionary(String fileName)
-        throws FileNotFoundException, IOException, URISyntaxException {
+            throws FileNotFoundException, IOException, URISyntaxException {
         // Open the dictionary file and store information in a hashmap.
 
         try (InputStream instream = getClass().getClassLoader().
                 getResourceAsStream(fileName);
-            InputStreamReader infile = new InputStreamReader(instream);
-            BufferedReader inBuffer = new BufferedReader(infile)) {
+                InputStreamReader infile = new InputStreamReader(instream);
+                BufferedReader inBuffer = new BufferedReader(infile)) {
             HashMap<String, Integer> dict = new HashMap<>();
 
             String line;
